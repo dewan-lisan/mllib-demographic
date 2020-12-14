@@ -1,0 +1,114 @@
+{
+	"namespace": "se.lisanuld.mllib.demo",
+	"type": "record",
+	"name": "adult.data",
+	"doc": "Avro Schema created to present adult data table. https://archive.ics.uci.edu/ml/datasets/Adult",
+    "version": "1.0",
+	"fields": [
+		{
+			"name": "age",
+			"type": [
+				"double",
+				"null"
+			]
+		},
+		{
+			"name": "workclass",
+			"type": [
+				"string",
+				"null"
+			]
+		},
+		{
+			"name": "fnlwgt",
+			"type": [
+				"double",
+				"null"
+			]
+		},
+		{
+			"name": "education",
+			"type": [
+				"string",
+				"null"
+			]
+		},
+		{
+        	"name": "education_num",
+        	"type": [
+        		"double",
+        		"null"
+        	]
+        },
+		{
+        	"name": "marital_status",
+        	"type": [
+        		"string",
+        		"null"
+        	]
+        },
+		{
+        	"name": "occupation",
+        	"type": [
+        		"string",
+        		"null"
+        	]
+        },
+		{
+        	"name": "relationship",
+        	"type": [
+        		"string",
+        		"null"
+        	]
+        },
+		{
+        	"name": "race",
+        	"type": [
+        		"string",
+        		"null"
+        	]
+        },
+		{
+        	"name": "sex",
+        	"type": [
+        		"string",
+        		"null"
+        	]
+        },
+		{
+        	"name": "capital_gain",
+        	"type": [
+        		"double",
+        		"null"
+        	]
+        },
+		{
+        	"name": "capital_loss",
+        	"type": [
+        		"double",
+        		"null"
+        	]
+        },
+		{
+        	"name": "hours_per_week",
+        	"type": [
+        		"double",
+        		"null"
+        	]
+        },
+		{
+        	"name": "native_country",
+        	"type": [
+        		"string",
+        		"null"
+        	]
+        },
+		{
+        	"name": "income",
+        	"type": [
+        		"string",
+        		"null"
+        	]
+        }
+	]
+}
