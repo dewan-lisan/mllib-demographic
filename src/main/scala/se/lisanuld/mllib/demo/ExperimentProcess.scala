@@ -80,10 +80,10 @@ class ExperimentProcess(spark: SparkSession) {
 
     //STEP 5: Evaluating the model
     val bcEvaluator = new BinaryClassificationEvaluator("AreaUnderROC")
-    println(s"Area under ROC curve: ${bcEvaluator.evaluate(predDf)}")
+    println(s"Area under ROC curve (before tuning): ${bcEvaluator.evaluate(predDf)}")
 
     val mcEvaluator = new MulticlassClassificationEvaluator("Accuracy")
-    println(s"Accuracy: ${mcEvaluator.evaluate(predDf)}")
+    println(s"Accuracy (before tuning): ${mcEvaluator.evaluate(predDf)}")
 
     //STEP 6: Hyperparameter tuning
     val paramGrid: Array[ParamMap] = new ParamGridBuilder()
@@ -101,12 +101,12 @@ class ExperimentProcess(spark: SparkSession) {
 
     //SETP 7: Make predictions and evaluate model performance
     val cvPredDf = cvModel.transform(testDf)
-    println(s"Area under ROC curve: ${bcEvaluator.evaluate(cvPredDf)}")
-    println(s"Accuracy: ${mcEvaluator.evaluate(cvPredDf)}")
+    println(s"Area under ROC curve (after tuning): ${bcEvaluator.evaluate(cvPredDf)}")
+    println(s"Accuracy (after tuning): ${mcEvaluator.evaluate(cvPredDf)}")
 
     //Let's query the data
-    cvPredDf.groupBy("occupation", "prediction").count().sort(desc("occupation")).show(100, false)
-    cvPredDf.groupBy("age", "prediction").count().sort("age").show(100, false)
+    cvPredDf.groupBy("occupation", "prediction", "label").count().sort(desc("occupation")).show(100, false)
+    cvPredDf.groupBy("age", "prediction", "label").count().sort("age").show(100, false)
   }
 
   def getVectorAssembledModel(allColumns: Array[String]) = {
