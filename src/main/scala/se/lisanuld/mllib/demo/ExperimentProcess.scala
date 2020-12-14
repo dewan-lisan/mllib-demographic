@@ -11,7 +11,7 @@ import org.apache.spark.sql.functions.{desc}
 import org.slf4j.{Logger, LoggerFactory}
 
 /*
-This is scala implementation of MLLib - binary classification
+This is a scala implementation of MLLib - binary classification example
 Databricks URL: https://docs.databricks.com/getting-started/spark/machine-learning.html
 */
 
