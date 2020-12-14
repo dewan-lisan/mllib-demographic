@@ -3,9 +3,11 @@ package se.lisanuld.mllib.demo
 import org.apache.spark.ml.classification.LogisticRegression
 import org.apache.spark.ml.evaluation.{BinaryClassificationEvaluator, MulticlassClassificationEvaluator}
 import org.apache.spark.ml.feature.{OneHotEncoderEstimator, StringIndexer, VectorAssembler}
+import org.apache.spark.ml.param.ParamMap
+import org.apache.spark.ml.tuning.{CrossValidator, CrossValidatorModel, ParamGridBuilder}
 import org.apache.spark.ml.{Pipeline, PipelineModel}
 import org.apache.spark.sql.{DataFrame, Dataset, Row, SparkSession}
-import org.apache.spark.sql.functions.{col, udf}
+import org.apache.spark.sql.functions.{desc}
 import org.slf4j.{Logger, LoggerFactory}
 
 /*
@@ -82,6 +84,29 @@ class ExperimentProcess(spark: SparkSession) {
 
     val mcEvaluator = new MulticlassClassificationEvaluator("Accuracy")
     println(s"Accuracy: ${mcEvaluator.evaluate(predDf)}")
+
+    //STEP 6: Hyperparameter tuning
+    val paramGrid: Array[ParamMap] = new ParamGridBuilder()
+      .addGrid(lr.regParam, Array(0.01, 0.5, 2.0))
+      .addGrid(lr.elasticNetParam, Array(0.0, 0.5, 1.0))
+      .build()
+
+    val crossValidator: CrossValidator = new CrossValidator()
+      .setEstimator(pipeline)
+      .setEvaluator(bcEvaluator)
+      .setNumFolds(3)
+      .setEstimatorParamMaps(paramGrid)
+
+    val cvModel: CrossValidatorModel = crossValidator.fit(trainDf)
+
+    //SETP 7: Make predictions and evaluate model performance
+    val cvPredDf = cvModel.transform(testDf)
+    println(s"Area under ROC curve: ${bcEvaluator.evaluate(cvPredDf)}")
+    println(s"Accuracy: ${mcEvaluator.evaluate(cvPredDf)}")
+
+    //Let's query the data
+    cvPredDf.groupBy("occupation", "prediction").count().sort(desc("occupation")).show(100, false)
+    cvPredDf.groupBy("age", "prediction").count().sort("age").show(100, false)
   }
 
   def getVectorAssembledModel(allColumns: Array[String]) = {
